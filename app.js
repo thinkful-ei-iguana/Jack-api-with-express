@@ -28,13 +28,49 @@ app.get('/cipher', (req, res) =>{
     res.send(ans.join());
 })
 
+function getRand() {
+    return  Math.ceil(Math.random() * 20 );
+}
+
 app.get('/lotto', (req, res) =>{
 
     let reso = req.query.numbers.map(num =>{
         return parseInt(num);
-    })
+    });
 
-    res.send(reso);
+    let draw = [];
+    for(let i = 0; i < 6; i++){
+        let numDraw = getRand();
+        while(draw.includes(numDraw)){
+            numDraw = getRand();
+        }
+        draw.push(numDraw);
+    }
+    let resNum = 0;
+    draw.forEach((num) =>{
+        if(reso.includes(num)){
+            resNum++;
+        }
+    });
+
+    let resString ="Sorry, you lose";
+    switch(resNum){
+        case 4:{
+            resString = "Congratulations, you win a free ticket";
+            break;
+        }
+        case 5: {
+            resString = "Congratulations! You win $100!";
+            break;
+        }
+        case 6:{
+            resString = "Wow! Unbelievable! You could have won the mega millions!";
+            break;
+        }
+
+    }
+
+    res.send(resString);
 })
 
 app.listen(8000, () => {
